@@ -23,7 +23,7 @@ services:
     restart: always
     environment:
       - MYSQL_DATABASE=database
-      - MYSQL_ROOT_PASSWORD=root # development purposes only
+      - MYSQL_ROOT_PASSWORD=root # TODO development purposes only
     ports:
       - 3306:3306
     expose:
