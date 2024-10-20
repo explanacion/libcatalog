@@ -1,0 +1,28 @@
+# phpstorm project files
+.idea
+*.iml
+
+# sublime text project / workspace files
+*.sublime-project
+*.sublime-workspace
+
+# visual studio code project files
+.vscode
+
+# composer vendor dir
+/vendor
+# yii2 runtime
+/runtime
+#vagrant folder
+/vagrant
+
+# NPM packages
+/node_modules
+.env
+package-lock.json
+
+# etc
+/.cache
+/temp
+/data
+/logs
