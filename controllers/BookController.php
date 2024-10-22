@@ -120,6 +120,16 @@ class BookController extends Controller
                     }
 
                     $transaction->commit();
+                    // Отправка СМС после успешного сохранения книги
+                    // TODO доделать нормальную авторизацию и хранить номер телефона в профиле пользователя
+                    $phone = '79087964781'; // номер телефона пользователя
+                    $text = 'Новая книга добавлена: ' . $model->title;
+
+                    if (Yii::$app->smsSender->sendSms($phone, $text)) {
+                        Yii::$app->session->setFlash('success', 'Книга успешно добавлена и СМС отправлена.');
+                    } else {
+                        Yii::$app->session->setFlash('error', 'Книга добавлена, но произошла ошибка при отправке СМС.');
+                    }
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
                     $transaction->rollBack();

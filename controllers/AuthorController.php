@@ -136,8 +136,9 @@ class AuthorController extends Controller
 
     public function actionSubscribe($id)
     {
-        // Логика подписки на новые книги автора
-        return;
+        // TODO Логика подписки на новые книги автора
+        // Возвращаемся на страницу автора
+        return $this->redirect(['view', 'id' => $id]);
     }
 
     /**

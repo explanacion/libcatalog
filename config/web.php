@@ -49,6 +49,11 @@ $config = [
             'rules' => [
             ],
         ],
+
+        'smsSender' => [
+            'class' => 'app\components\SmsSender',
+            'apiKey' => 'XXXXXXXXXXXXYYYYYYYYYYYYZZZZZZZZXXXXXXXXXXXXYYYYYYYYYYYYZZZZZZZZ',
+        ],
     ],
     'params' => $params,
 ];
