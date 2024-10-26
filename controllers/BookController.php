@@ -105,11 +105,8 @@ class BookController extends Controller
             $postData = $this->request->post();
             if ($model->load($postData)) {
                 $transaction = Yii::$app->db->beginTransaction();
-                $model->imgFile = UploadedFile::getInstance($model, 'imgFile');
                 if ($model->uploadPhoto() && $model->save()) {
                     $authorIds = array_values(ArrayHelper::getValue($postData,'Book.authorIds'));
-                    // Удаляем старые связи для данной книги
-                    BookAuthor::deleteAll(['book_id' => $model->id]);
 
                     // Добавляем новые связи
                     foreach ($authorIds as $authorId) {

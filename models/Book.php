@@ -68,9 +68,9 @@ class Book extends \yii\db\ActiveRecord
     public function uploadPhoto()
     {
         $this->imgFile = UploadedFile::getInstance($this, 'imgFile');
-        if (true && $this->validate()) {
+        if ($this->imgFile && $this->validate()) {
             $photo_path = 'uploads/'. $this->imgFile->baseName. '.'. $this->imgFile->extension;
-            if (($this->imgFile !== null) && $this->imgFile->saveAs($photo_path)) {
+            if ($this->imgFile->saveAs($photo_path)) {
                 $this->photo_path = $photo_path;
             }
             return true;
