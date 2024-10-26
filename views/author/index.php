@@ -39,10 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
                  },
                 'template' => '{view} {update} {delete} {subscribe}',
                 'buttons' => [
-                    'subscribe' => function ($url, Author $model) {
+                    'subscribe' => function ($url) {
                         return Html::a('@', $url, [
                             'title' => Yii::t('app', 'Subscribe'),
                             'data-pjax' => '0',
+                            'class' => 'subscribe-button',
                         ]);
                     },
                 ],

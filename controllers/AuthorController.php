@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use app\models\Author;
 use app\models\AuthorSearch;
+use app\models\Subscription;
 use yii\filters\AccessControl;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,7 +28,7 @@ class AuthorController extends Controller
                     'class' => AccessControl::class,
                     'rules' => [
                         [
-                            'actions' => ['index', 'view', 'subscribe'],
+                            'actions' => ['index', 'view', 'subscribe', 'create-subscribe'],
                             'allow' => true,
                             'roles' => ['?', '@'],
                         ],
@@ -43,6 +45,7 @@ class AuthorController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'create-subscribe' => ['POST'],
                     ],
                 ],
             ]
@@ -134,11 +137,48 @@ class AuthorController extends Controller
         return $this->redirect(['index']);
     }
 
-    public function actionSubscribe($id)
+    // создание подписки на новые книги автора
+    public function actionCreateSubscribe($id)
     {
-        // TODO Логика подписки на новые книги автора
+        if (!$id) {
+            throw new BadRequestHttpException('Не указан идентификатор автора.');
+        }
+        if (!$this->findModel($id)) {
+            throw new BadRequestHttpException('Автор не найден.');
+        }
+
+        $phone_number = $this->request->post('phone_number');
+        if (!$phone_number) {
+            throw new BadRequestHttpException('Не указан номер телефона.');
+        }
+        if (!preg_match('/^\d{7,15}$/', $phone_number)) {
+            \Yii::$app->session->setFlash('error', 'Неверный номер телефона. Пример корректного номера: 79087964781');
+            return $this->redirect(['index', 'id' => $id]);
+        }
+
+        $exists = Subscription::find()->where(['author_id' => $id, 'phone_number' => $phone_number])->exists();
+        if ($exists) {
+            \Yii::$app->session->setFlash('error', 'Вы уже подписаны на рассылку автора.');
+        } else {
+            $subscription = new Subscription();
+            $subscription->author_id = $id;
+            $subscription->phone_number = $phone_number;
+            if ($subscription->save()) {
+                \Yii::$app->session->setFlash('success', 'Вы успешно подписались на рассылку новых книг автора.');
+            } else {
+                \Yii::$app->session->setFlash('error', 'При подписке на рассылку возникли ошибки.');
+            }
+        }
+
         // Возвращаемся на страницу автора
         return $this->redirect(['view', 'id' => $id]);
+    }
+
+    // инициировать подписку
+    public function actionSubscribe($id)
+    {
+        $model = $this->findModel($id);
+        return $this->render('subscribe', ['model' => $model]);
     }
 
     /**

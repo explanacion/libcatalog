@@ -1,5 +1,7 @@
 <?php
 
+defined('APP_NAME') or define('APP_NAME', 'lib_catalog');
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -33,11 +35,14 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
+            'flushInterval' => 1,
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
+                    // file runtime/logs/app.log
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['info', 'error', 'warning'],
+                    'enabled' => true
                 ],
             ],
         ],
